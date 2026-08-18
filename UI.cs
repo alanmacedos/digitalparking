@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 public class UI
 {
@@ -85,11 +86,20 @@ public class UI
         ");
     }
 
-    private int GetOption()
+    private static int GetOption()
     {
-        Console.Write("Opção: ");
-        int option = int.Parse(Console.ReadLine()!);
-        return option;
+        while (true)
+        {
+            Console.Write("Opção: ");
+            string? option = Console.ReadLine()!;
+
+            if (Regex.IsMatch(option, @"^-?[0-9]+$"))
+            {
+                return int.Parse(option!);
+            }
+
+            Console.WriteLine("A opção deve ser um número inteiro!");
+        }
     }
 
     private void DisplayTittle(string tittle)
@@ -218,12 +228,12 @@ public class UI
 
         Console.WriteLine("\nVeículo encontrado!");
 
-        Console.WriteLine("\nData e horário de saída (dd/MM/yyyy HH:mm): ");
+        Console.WriteLine("\nData e horário de saída (HH:mm): ");
         DateTime exitTime;
 
-        while (!DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out exitTime))
+        while (!DateTime.TryParseExact(Console.ReadLine(), "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out exitTime))
         {
-            Console.WriteLine("\nData inválida. Digite novamente (dd/MM/yyyy HH:mm): ");
+            Console.WriteLine("\nData inválida. Digite novamente (HH:mm): ");
         }
 
         ParkingSession? session = parkingLot.ExitVehicle(plate, exitTime);
